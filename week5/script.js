@@ -1,23 +1,25 @@
-// Код валидации формы
-function validateForm(setting) {
+(() => {
     'use strict';
-    const validator = new Validators(setting);
-    const form = document.getElementById(setting.formId);
+    // Код валидации формы
 
-    form.addEventListener('blur', e => validator.validate(e.target), true);
-    form.addEventListener('focus', e => validator.unValidate(e.target), true);
-    form.addEventListener('submit', event => {
-        let validateMapping = Array.from(form.getElementsByTagName("INPUT")).map(el => validator.validate(el));
-        if (validateMapping.every(x => x)) {
-            form.classList.remove(setting.formInvalidClass);
-            form.classList.add(setting.formValidClass);
-        } else {
-            form.classList.add(setting.formInvalidClass);
-            form.classList.remove(setting.formValidClass);
-        }
-        event.preventDefault();
-    });
+    window.validateForm = function (setting) {
+        const validator = new Validators(setting);
+        const form = document.getElementById(setting.formId);
 
+        form.addEventListener('blur', e => validator.validate(e.target), true);
+        form.addEventListener('focus', e => validator.unValidate(e.target), true);
+        form.addEventListener('submit', event => {
+            let validateMapping = Array.from(form.getElementsByTagName("INPUT")).map(el => validator.validate(el));
+            if (validateMapping.every(x => x)) {
+                form.classList.remove(setting.formInvalidClass);
+                form.classList.add(setting.formValidClass);
+            } else {
+                form.classList.add(setting.formInvalidClass);
+                form.classList.remove(setting.formValidClass);
+            }
+            event.preventDefault();
+        });
+    };
 
     function Validators(setting) {
         this.setting = setting;
@@ -67,4 +69,5 @@ function validateForm(setting) {
             return /^\-?\d+$/.test(elem.value) && min <= v && v <= max;
         };
     }
-}
+
+})();
